@@ -1,16 +1,12 @@
-from PyPDF2 import PdfReader
+import streamlit as st
 import pandas as pd
+from PyPDF2 import PdfReader
 from io import BytesIO
-import requests
 
-# Download PDF directly from Google Drive (converted link)
-pdf_url = "https://drive.google.com/uc?export=download&id=14YSi5d04tAvaHaRfBWCSWdXnH7hPMPsN"
-response = requests.get(pdf_url)
-pdf_content = BytesIO(response.content)
+st.set_page_config(page_title="PDF to Excel - ITR Extractor", layout="wide")
+st.title("📄 PDF to Excel Converter - ITR Computation Extractor")
 
-# Read text from PDF
-reader = PdfReader(pdf_content)
-all_text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+uploaded_pdf = st.file_uploader("Upload your ITR Computation PDF", type="pdf")
 
 def extract_itr_data_from_pdf_text(text):
     data = {
@@ -37,8 +33,27 @@ def extract_itr_data_from_pdf_text(text):
         elif "Total Exempt Income" in line: data["Total Exempt Income"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
     return data
 
-parsed_data = extract_itr_data_from_pdf_text(all_text)
-df = pd.DataFrame(parsed_data.items(), columns=["Field", "Value"])
-df.to_excel("ITR_Computation_Extracted.xlsx", index=False)
-print("✅ Excel file saved: ITR_Computation_Extracted.xlsx")
+if uploaded_pdf is not None:
+    try:
+        reader = PdfReader(uploaded_pdf)
+        all_text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+        parsed_data = extract_itr_data_from_pdf_text(all_text)
+
+        df = pd.DataFrame(parsed_data.items(), columns=["Field", "Value"])
+        st.subheader("📊 Extracted Data")
+        st.dataframe(df, use_container_width=True)
+
+        # Create downloadable Excel
+        excel_output = BytesIO()
+        with pd.ExcelWriter(excel_output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name="Computation")
+        st.download_button(
+            label="📥 Download Excel File",
+            data=excel_output.getvalue(),
+            file_name="ITR_Computation_Extracted.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        st.error(f"❌ Failed to read PDF: {str(e)}")
 
