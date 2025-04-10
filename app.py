@@ -25,19 +25,19 @@ if uploaded_file:
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
         "Last Name": name_info.get("SurNameOrOrgName", ""),
-        "Mobile No": personal_info.get("MobileNo", ""),
-        "Email Address": personal_info.get("EmailAddress", ""),
+        "Mobile No": data.get("MobileNo", personal_info.get("MobileNo", "")),
+        "Email Address": data.get("EmailAddress", ""),
         "Date of Incorporation": personal_info.get("DOB", ""),
         "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", ""),
         "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
-        "Assessee Name": personal_info.get("AssesseeVerName", "")
+        "Assessee Name": itr3.get("Declaration", {}).get("AssesseeVerName", "")
     }
 
     filing_info = {
-        "Name": name_info.get("FirstName", ""),
+        "Name": itr3.get("Declaration", {}).get("AssesseeVerName", ""),
         "PAN Number": personal_info.get("PAN", ""),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
-        "Acknowledgement No": filing_status.get("AckNo", ""),
+        "Acknowledgement No": filing_status.get("AckNum44AB", ""),
         "Date of Filing": filing_status.get("ItrFilingDueDate", ""),
         "Status of CPC": filing_status.get("CpcProcessingStatus", "")
     }
@@ -134,3 +134,4 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
