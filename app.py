@@ -22,7 +22,7 @@ if uploaded_file:
     # Robust header field resolution with fallbacks
     header_info = {
         "PAN": personal_info.get("PAN", ""),
-        "GST Number": personal_info.get("GSTINNo") or personal_info.get("GSTIN", ""),
+        "GST Number": personal_info.get("GSTINNo", personal_info.get("GSTIN", "")),
         "Legal Name of Business": personal_info.get("TradeName1") or verification.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
@@ -30,7 +30,7 @@ if uploaded_file:
         "Mobile No": personal_info.get("MobileNo", ""),
         "Email Address": personal_info.get("EmailAddress", ""),
         "Date of Incorporation": personal_info.get("DOB", ""),
-        "Assessment Year": data.get("FormName", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
+        "Assessment Year": data.get("AssessmentYear", ""),
         "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
         "Assessee Name": verification.get("AssesseeVerName", "")
     }
