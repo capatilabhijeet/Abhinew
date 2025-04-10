@@ -24,7 +24,7 @@ FIELD_MAP = {
     "Assessee Name": ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"]
 }
 
-def get_value_by_path(data, path):
+def get_value_by_path(data, path, allow_fallback=True):
     # Step 1: Try original path
     ref = data
     for key in path:
@@ -32,17 +32,18 @@ def get_value_by_path(data, path):
     if isinstance(ref, (str, int, float)):
         return ref
 
-    # Step 2: Fallbacks only if needed
-    fallback_paths = {
-        "GSTINNo": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "GSTIN"],
-        "TradeName1": ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"],
-        "MobileNo": ["ITR", "ITR3", "PartA_GEN2", "MobileNo"],
-        "EmailAddress": ["ITR", "ITR3", "PartA_GEN2", "EmailAddress"]
-    }
+    # Step 2: Fallbacks — only if not already tried
+    if allow_fallback:
+        fallback_paths = {
+            "GSTINNo": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "GSTIN"],
+            "TradeName1": ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"],
+            "MobileNo": ["ITR", "ITR3", "PartA_GEN2", "MobileNo"],
+            "EmailAddress": ["ITR", "ITR3", "PartA_GEN2", "EmailAddress"]
+        }
 
-    last_key = path[-1]
-    if last_key in fallback_paths:
-        return get_value_by_path(data, fallback_paths[last_key])
+        last_key = path[-1]
+        if last_key in fallback_paths:
+            return get_value_by_path(data, fallback_paths[last_key], allow_fallback=False)
 
     return ""
 
