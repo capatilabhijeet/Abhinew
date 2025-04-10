@@ -17,26 +17,25 @@ if uploaded_file:
     filing_status = itr3.get("PartA_GEN1", {}).get("FilingStatus", {})
     name_info = personal_info.get("AssesseeName", {})
     declaration = itr3.get("Declaration", {})
-    verification = itr3.get("Verification", {}).get("Declaration", {})
 
-    # ✅ Safe and complete header extraction
+    # Robust header field resolution with fallbacks
     header_info = {
-    "PAN": personal_info.get("PAN", ""),
-    "GST Number": personal_info.get("GSTINNo") or personal_info.get("GSTIN", ""),
-    "Legal Name of Business": personal_info.get("TradeName1") or verification.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
-    "First Name": name_info.get("FirstName", ""),
-    "Middle Name": name_info.get("MiddleName", ""),
-    "Last Name": name_info.get("SurNameOrOrgName", ""),
-    "Mobile No": itr3.get("PartA_GEN2", {}).get("MobileNo") or personal_info.get("MobileNo", ""),
-    "Email Address": itr3.get("PartA_GEN2", {}).get("EmailAddress") or personal_info.get("EmailAddress", ""),
-    "Date of Incorporation": personal_info.get("DOB", ""),
-    "Assessment Year": data.get("AssessmentYear", ""),
-    "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
-    "Assessee Name": verification.get("AssesseeVerName", "")
-}
+        "PAN": personal_info.get("PAN", ""),
+        "GST Number": personal_info.get("GSTINNo", personal_info.get("GSTIN", "")),
+        "Legal Name of Business": personal_info.get("TradeName1", declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", ""))),
+        "First Name": name_info.get("FirstName", ""),
+        "Middle Name": name_info.get("MiddleName", ""),
+        "Last Name": name_info.get("SurNameOrOrgName", ""),
+        "Mobile No": itr3.get("PartA_GEN2", {}).get("MobileNo", personal_info.get("MobileNo", "")),
+        "Email Address": itr3.get("PartA_GEN2", {}).get("EmailAddress", personal_info.get("EmailAddress", "")),
+        "Date of Incorporation": personal_info.get("DOB", ""),
+        "Assessment Year": data.get("FormName", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
+        "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
+        "Assessee Name": data.get("ITR", {}).get("ITR3", {}).get("Verification", {}).get("Declaration", {}).get("AssesseeVerName", "")
+    }
 
     filing_info = {
-        "Name": verification.get("AssesseeVerName", ""),
+        "Name": declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
         "PAN Number": personal_info.get("PAN", ""),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
         "Acknowledgement No": filing_status.get("AckNum44AB", filing_status.get("AckNo", "")),
@@ -44,7 +43,7 @@ if uploaded_file:
         "Status of CPC": filing_status.get("CpcProcessingStatus", "")
     }
 
-    # Income field mapping
+    # Prepare income mappings
     mapped_fields = {
         "Salaries": "Income chargeable under the head 'Salaries'",
         "IncomeFromHP": "Income chargeable under the head 'House Property'",
@@ -108,7 +107,15 @@ if uploaded_file:
         output_data["Amount (₹)"].append(val)
 
     df_computation = pd.DataFrame(output_data)
-    header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
+
+    st.subheader("🔍 Raw Header Info (Debug)")
+st.json(header_info)
+
+missing = {k: v for k, v in header_info.items() if not v}
+if missing:
+    st.warning(f"⚠️ Missing fields: {', '.join(missing.keys())}")
+
+header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
     filing_df = pd.DataFrame(filing_info.items(), columns=["Field", "Value"])
 
     st.success("✅ Computation and header data extracted successfully!")
@@ -135,3 +142,4 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
