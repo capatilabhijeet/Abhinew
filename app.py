@@ -8,43 +8,45 @@ st.title("🧾 Income Tax JSON to Excel - Detailed Format")
 
 uploaded_file = st.file_uploader("Upload your ITR JSON file", type="json")
 
+# Field mapping template for ITR-3
+FIELD_MAP = {
+    "PAN": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "PAN"],
+    "GST Number": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "GSTINNo"],
+    "Legal Name of Business": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "TradeName1"],
+    "First Name": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "FirstName"],
+    "Middle Name": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "MiddleName"],
+    "Last Name": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "SurNameOrOrgName"],
+    "Mobile No": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "MobileNo"],
+    "Email Address": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "EmailAddress"],
+    "Date of Incorporation": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "DOB"],
+    "Assessment Year": ["AssessmentYear"],
+    "Aadhar Number": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AadhaarCardNo"],
+    "Assessee Name": ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"]
+}
+
+def get_value_by_path(data, path):
+    for key in path:
+        data = data.get(key, {}) if isinstance(data, dict) else {}
+    return data if isinstance(data, (str, int, float)) else ""
+
 if uploaded_file:
     data = json.load(uploaded_file)
 
+    header_info = {field: get_value_by_path(data, path) for field, path in FIELD_MAP.items()}
+
     itr3 = data.get("ITR", {}).get("ITR3", {})
     partb_ti = itr3.get("PartB-TI", {})
-    personal_info = itr3.get("PartA_GEN1", {}).get("PersonalInfo", {})
     filing_status = itr3.get("PartA_GEN1", {}).get("FilingStatus", {})
-    name_info = personal_info.get("AssesseeName", {})
-    declaration = itr3.get("Declaration", {})
-    verification = itr3.get("Verification", {}).get("Declaration", {})
-
-    # Robust header field resolution with fallbacks
-    header_info = {
-        "PAN": personal_info.get("PAN", ""),
-        "GST Number": personal_info.get("GSTINNo", personal_info.get("GSTIN", "")),
-        "Legal Name of Business": personal_info.get("TradeName1") or verification.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
-        "First Name": name_info.get("FirstName", ""),
-        "Middle Name": name_info.get("MiddleName", ""),
-        "Last Name": name_info.get("SurNameOrOrgName", ""),
-        "Mobile No": personal_info.get("MobileNo", ""),
-        "Email Address": personal_info.get("EmailAddress", ""),
-        "Date of Incorporation": personal_info.get("DOB", ""),
-        "Assessment Year": data.get("AssessmentYear", ""),
-        "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
-        "Assessee Name": verification.get("AssesseeVerName", "")
-    }
 
     filing_info = {
-        "Name": declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
-        "PAN Number": personal_info.get("PAN", ""),
+        "Name": get_value_by_path(data, FIELD_MAP["Assessee Name"]),
+        "PAN Number": get_value_by_path(data, FIELD_MAP["PAN"]),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
         "Acknowledgement No": filing_status.get("AckNum44AB", filing_status.get("AckNo", "")),
         "Date of Filing": filing_status.get("ItrFilingDueDate", filing_status.get("DateOfFiling", "")),
         "Status of CPC": filing_status.get("CpcProcessingStatus", "")
     }
 
-    # Prepare income mappings
     mapped_fields = {
         "Salaries": "Income chargeable under the head 'Salaries'",
         "IncomeFromHP": "Income chargeable under the head 'House Property'",
@@ -120,3 +122,4 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
