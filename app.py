@@ -109,14 +109,14 @@ if uploaded_file:
     df_computation = pd.DataFrame(output_data)
 
     st.subheader("🔍 Raw Header Info (Debug)")
-st.json(header_info)
+    st.json(header_info)
 
-missing = {k: v for k, v in header_info.items() if not v}
-if missing:
-    st.warning(f"⚠️ Missing fields: {', '.join(missing.keys())}")
+    missing = {k: v for k, v in header_info.items() if not v}
+    if missing:
+        st.warning(f"⚠️ Missing fields: {', '.join(missing.keys())}")
 
-header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
-    filing_df = pd.DataFrame(filing_info.items(), columns=["Field", "Value"])
+    header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
+
 
     st.success("✅ Computation and header data extracted successfully!")
     st.subheader("Header Information")
