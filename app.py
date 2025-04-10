@@ -31,6 +31,20 @@ def get_value_by_path(data, path):
         return data
 
     # fallback handling
+    if path[-1] == "GSTINNo":
+        return get_value_by_path(data, path[:-1] + ["GSTIN"])
+    if path[-1] == "TradeName1":
+        fallback1 = get_value_by_path(data, ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"])
+        fallback2 = get_value_by_path(data, ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "SurNameOrOrgName"])
+        return fallback1 or fallback2
+    if path[-1] == "MobileNo":
+        return get_value_by_path(data, ["ITR", "ITR3", "PartA_GEN2", "MobileNo"])
+    if path[-1] == "EmailAddress":
+        return get_value_by_path(data, ["ITR", "ITR3", "PartA_GEN2", "EmailAddress"])
+
+    return ""
+
+    # fallback handling
 if path[-1] == "GSTINNo":
     return get_value_by_path(data, path[:-1] + ["GSTIN"])
 if path[-1] == "TradeName1":
@@ -160,3 +174,4 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
