@@ -15,19 +15,24 @@ if uploaded_file:
     partb_ti = itr3.get("PartB-TI", {})
     personal_info = itr3.get("PartA_GEN1", {}).get("PersonalInfo", {})
     filing_status = itr3.get("PartA_GEN1", {}).get("FilingStatus", {})
+    name_info = personal_info.get("AssesseeName", {})
 
     # Extract header data
     header_info = {
         "PAN": personal_info.get("PAN", ""),
         "GST Number": personal_info.get("GSTIN", ""),
-        "Legal Name of Business": personal_info.get("AssesseeName", {}).get("FirstName", ""),
+        "Legal Name of Business": name_info.get("FirstName", ""),
+        "First Name": name_info.get("FirstName", ""),
+        "Middle Name": name_info.get("MiddleName", ""),
+        "Last Name": name_info.get("SurNameOrOrgName", ""),
         "Mobile No": personal_info.get("MobileNo", ""),
         "Email Address": personal_info.get("EmailAddress", ""),
-        "Date of Incorporation": personal_info.get("DateOfFormation", "")
+        "DOB": personal_info.get("DateOfFormation", ""),
+        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", "")
     }
 
     filing_info = {
-        "Name": personal_info.get("AssesseeName", {}).get("FirstName", ""),
+        "Name": name_info.get("FirstName", ""),
         "PAN Number": personal_info.get("PAN", ""),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
         "Acknowledgement No": filing_status.get("AckNo", ""),
@@ -100,7 +105,6 @@ if uploaded_file:
 
     df_computation = pd.DataFrame(output_data)
 
-    # Build header info as DataFrame blocks
     header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
     filing_df = pd.DataFrame(filing_info.items(), columns=["Field", "Value"])
 
@@ -128,5 +132,3 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-
