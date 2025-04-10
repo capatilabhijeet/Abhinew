@@ -8,6 +8,12 @@ st.title("📄 PDF to Excel Converter - ITR Computation Extractor")
 
 uploaded_pdf = st.file_uploader("Upload your ITR Computation PDF", type="pdf")
 
+def safe_parse_number(line):
+    try:
+        return float(line.split()[-1].replace(',', '').replace('₹', ''))
+    except:
+        return 0.0
+
 def extract_itr_data_from_pdf_text(text):
     data = {
         "PAN": "", "Name": "", "Mobile No": "", "Email": "", "GST Number": "",
@@ -25,12 +31,12 @@ def extract_itr_data_from_pdf_text(text):
         elif "Email" in line and not data["Email"]: data["Email"] = line.split()[-1]
         elif "GST" in line and not data["GST Number"]: data["GST Number"] = line.split()[-1]
         elif "Date of Incorporation" in line: data["Date of Incorporation"] = line.split(":")[-1].strip()
-        elif "Income from Salaries" in line: data["Income from Salaries"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
-        elif "House Property" in line: data["Income from House Property"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
-        elif "Business" in line and "Profits" in line: data["Profits and gains from Business"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
-        elif "Capital Gain" in line: data["Capital Gains"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
-        elif "Other Sources" in line: data["Income from Other Sources"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
-        elif "Total Exempt Income" in line: data["Total Exempt Income"] = float(line.split()[-1].replace(',', '').replace('₹', ''))
+        elif "Income from Salaries" in line: data["Income from Salaries"] = safe_parse_number(line)
+        elif "House Property" in line: data["Income from House Property"] = safe_parse_number(line)
+        elif "Business" in line and "Profits" in line: data["Profits and gains from Business"] = safe_parse_number(line)
+        elif "Capital Gain" in line: data["Capital Gains"] = safe_parse_number(line)
+        elif "Other Sources" in line: data["Income from Other Sources"] = safe_parse_number(line)
+        elif "Total Exempt Income" in line: data["Total Exempt Income"] = safe_parse_number(line)
     return data
 
 if uploaded_pdf is not None:
@@ -56,4 +62,3 @@ if uploaded_pdf is not None:
 
     except Exception as e:
         st.error(f"❌ Failed to read PDF: {str(e)}")
-
