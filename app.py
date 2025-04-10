@@ -27,7 +27,22 @@ FIELD_MAP = {
 def get_value_by_path(data, path):
     for key in path:
         data = data.get(key, {}) if isinstance(data, dict) else {}
-    return data if isinstance(data, (str, int, float)) else ""
+    if isinstance(data, (str, int, float)):
+        return data
+
+    # fallback handling
+    if path[-1] == "GSTINNo":
+        return get_value_by_path(json_data, path[:-1] + ["GSTIN"])
+    if path[-1] == "TradeName1":
+        fallback1 = get_value_by_path(json_data, ["ITR", "ITR3", "Verification", "Declaration", "AssesseeVerName"])
+        fallback2 = get_value_by_path(json_data, ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "SurNameOrOrgName"])
+        return fallback1 or fallback2
+    if path[-1] == "MobileNo":
+        return get_value_by_path(json_data, ["ITR", "ITR3", "PartA_GEN2", "MobileNo"])
+    if path[-1] == "EmailAddress":
+        return get_value_by_path(json_data, ["ITR", "ITR3", "PartA_GEN2", "EmailAddress"])
+
+    return ""
 
 if uploaded_file:
     data = json.load(uploaded_file)
@@ -73,7 +88,30 @@ if uploaded_file:
         return data if isinstance(data, (int, float)) else 0.0
 
     output_data = {
-        "Particulars": [...],  # unchanged for brevity
+        "Particulars": [
+            "B1 - Salaries", "Gross Salary", "Less :Allowances", "Net Salary", "Less :Deductions u/s 16",
+            "Income chargeable under the head 'Salaries'",
+            "B2 - Income from House Property", "Gross rent received/ receivable/ lettable value during the year",
+            "Less :Tax paid to local authorities", "Annual Value", "Less : 30% of Annual Value",
+            "Less :Interest payable on borrowed capital", "Less :Arrears/Unrealised rent received during the year less 30%",
+            "Income chargeable under the head 'House Property'",
+            "B3 - Profits and gains from business or profession",
+            "Profit and gains from business other than speculative business and specified business",
+            "Profit and gains from speculative business", "Profit and gains from specified business",
+            "Income chargeable to tax at special rates",
+            "Income chargeable under the head 'Profits and gains from business or profession'",
+            "B4 - Capital gains", "Short term", "Short-term chargeable @ 15%", "Short-term chargeable @ 30%",
+            "Short-term chargeable at applicable rate", "Short-term chargeable at special rates in India as per DTAA",
+            "Total short-term", "Long term", "Long-term chargeable @ 10%", "Long-term chargeable @ 20%",
+            "LTCG chargeable at special rates as per DTAA", "Total Long-term",
+            "Income chargeable under the head 'Capital Gain'",
+            "B5 - Income from other sources", "Net Income from other sources chargeable to tax at normal applicable rates",
+            "Income chargeable to tax at special rate", "Income from the activity of owning & maintaining race horses",
+            "Income chargeable under the head 'Income from other sources'",
+            "B6 - Details of Exempt Income", "Interest income", "Net Agricultural income for the year",
+            "Others exempt income", "Income not chargeable to tax as per DTAA",
+            "Pass through income not chargeable to tax", "Total Exempt Income"
+        ]
         "Amount (₹)": []
     }
 
