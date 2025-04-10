@@ -11,8 +11,31 @@ uploaded_file = st.file_uploader("Upload your ITR JSON file", type="json")
 if uploaded_file:
     data = json.load(uploaded_file)
 
-    partb_ti = data.get("ITR", {}).get("ITR3", {}).get("PartB-TI", {})
+    itr3 = data.get("ITR", {}).get("ITR3", {})
+    partb_ti = itr3.get("PartB-TI", {})
+    personal_info = itr3.get("PartA_GEN1", {}).get("PersonalInfo", {})
+    filing_status = itr3.get("PartA_GEN1", {}).get("FilingStatus", {})
 
+    # Extract header data
+    header_info = {
+        "PAN": personal_info.get("PAN", ""),
+        "GST Number": personal_info.get("GSTIN", ""),
+        "Legal Name of Business": personal_info.get("AssesseeName", {}).get("FirstName", ""),
+        "Mobile No": personal_info.get("MobileNo", ""),
+        "Email Address": personal_info.get("EmailAddress", ""),
+        "Date of Incorporation": personal_info.get("DateOfFormation", "")
+    }
+
+    filing_info = {
+        "Name": personal_info.get("AssesseeName", {}).get("FirstName", ""),
+        "PAN Number": personal_info.get("PAN", ""),
+        "Filed u/s": filing_status.get("ReturnFiledSection", ""),
+        "Acknowledgement No": filing_status.get("AckNo", ""),
+        "Date of Filing": filing_status.get("DateOfFiling", ""),
+        "Status of CPC": filing_status.get("CpcProcessingStatus", "")
+    }
+
+    # Prepare income mappings
     mapped_fields = {
         "Salaries": "Income chargeable under the head 'Salaries'",
         "IncomeFromHP": "Income chargeable under the head 'House Property'",
@@ -75,18 +98,29 @@ if uploaded_file:
         val = get_nested_value(partb_ti, matched_key) if matched_key else 0.0
         output_data["Amount (₹)"].append(val)
 
-    df = pd.DataFrame(output_data)
+    df_computation = pd.DataFrame(output_data)
 
-    st.success("✅ Computation data extracted successfully!")
-    st.dataframe(df, use_container_width=True)
+    # Build header info as DataFrame blocks
+    header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
+    filing_df = pd.DataFrame(filing_info.items(), columns=["Field", "Value"])
 
-    def to_excel(df):
+    st.success("✅ Computation and header data extracted successfully!")
+    st.subheader("Header Information")
+    st.dataframe(header_df, use_container_width=True)
+    st.dataframe(filing_df, use_container_width=True)
+
+    st.subheader("Income Computation")
+    st.dataframe(df_computation, use_container_width=True)
+
+    def to_excel(header_df, filing_df, df_computation):
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='COMPUTATION OF TOTAL INCOME')
+            header_df.to_excel(writer, index=False, sheet_name='COMPUTATION', startrow=0)
+            filing_df.to_excel(writer, index=False, sheet_name='COMPUTATION', startrow=header_df.shape[0] + 3)
+            df_computation.to_excel(writer, index=False, sheet_name='COMPUTATION', startrow=header_df.shape[0] + filing_df.shape[0] + 6)
         return output.getvalue()
 
-    excel_data = to_excel(df)
+    excel_data = to_excel(header_df, filing_df, df_computation)
 
     st.download_button(
         label="📥 Download Computation Excel",
@@ -94,4 +128,5 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
