@@ -26,8 +26,8 @@ if uploaded_file:
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
         "Last Name": name_info.get("SurNameOrOrgName", ""),
-        "Mobile No": itr3.get("PartA_GEN2", {}).get("MobileNo", personal_info.get("MobileNo", "")),
-        "Email Address": itr3.get("PartA_GEN2", {}).get("EmailAddress", personal_info.get("EmailAddress", "")),
+        "Mobile No": personal_info.get("MobileNo", ""), ""), {}).get("MobileNo", personal_info.get("MobileNo", "")),
+        "Email Address": personal_info.get("EmailAddress", ""), {}).get("EmailAddress", personal_info.get("EmailAddress", "")),
         "Date of Incorporation": personal_info.get("DOB", ""),
         "Assessment Year": data.get("FormName", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
         "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
@@ -109,14 +109,14 @@ if uploaded_file:
     df_computation = pd.DataFrame(output_data)
 
     st.subheader("🔍 Raw Header Info (Debug)")
-    st.json(header_info)
+st.json(header_info)
 
-    missing = {k: v for k, v in header_info.items() if not v}
-    if missing:
-        st.warning(f"⚠️ Missing fields: {', '.join(missing.keys())}")
+missing = {k: v for k, v in header_info.items() if not v}
+if missing:
+    st.warning(f"⚠️ Missing fields: {', '.join(missing.keys())}")
 
-    header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
-
+header_df = pd.DataFrame(header_info.items(), columns=["Field", "Value"])
+    filing_df = pd.DataFrame(filing_info.items(), columns=["Field", "Value"])
 
     st.success("✅ Computation and header data extracted successfully!")
     st.subheader("Header Information")
@@ -142,4 +142,3 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
