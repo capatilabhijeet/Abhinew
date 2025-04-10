@@ -20,15 +20,17 @@ if uploaded_file:
     # Extract header data
     header_info = {
         "PAN": personal_info.get("PAN", ""),
-        "GST Number": personal_info.get("GSTIN", ""),
-        "Legal Name of Business": name_info.get("FirstName", ""),
+        "GST Number": personal_info.get("GSTINNo", ""),
+        "Legal Name of Business": personal_info.get("TradeName1", ""),
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
         "Last Name": name_info.get("SurNameOrOrgName", ""),
         "Mobile No": personal_info.get("MobileNo", ""),
         "Email Address": personal_info.get("EmailAddress", ""),
-        "DOB": personal_info.get("DateOfFormation", ""),
-        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", "")
+        "Date of Incorporation": personal_info.get("DOB", ""),
+        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", ""),
+        "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
+        "Assessee Name": personal_info.get("AssesseeVerName", "")
     }
 
     filing_info = {
@@ -36,7 +38,7 @@ if uploaded_file:
         "PAN Number": personal_info.get("PAN", ""),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
         "Acknowledgement No": filing_status.get("AckNo", ""),
-        "Date of Filing": filing_status.get("DateOfFiling", ""),
+        "Date of Filing": filing_status.get("ItrFilingDueDate", ""),
         "Status of CPC": filing_status.get("CpcProcessingStatus", "")
     }
 
