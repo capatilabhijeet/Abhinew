@@ -1,3 +1,7 @@
 streamlit
 pandas
 openpyxl
+PyPDF2
+pandas
+openpyxl
+requests
