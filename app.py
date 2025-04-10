@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from io import BytesIO
 
-st.set_page_config(page_title="ITR JSON to Excel", layout="wide")
+st.set_page_config(page_title="ITR JSON to Excel - Detailed Format", layout="wide")
 st.title("🧾 Income Tax JSON to Excel - Detailed Format")
 
 uploaded_file = st.file_uploader("Upload your ITR JSON file", type="json")
@@ -13,7 +13,6 @@ if uploaded_file:
 
     partb_ti = data.get("ITR", {}).get("ITR3", {}).get("PartB-TI", {})
 
-    # Income field map to Excel-style rows
     mapped_fields = {
         "Salaries": "Income chargeable under the head 'Salaries'",
         "IncomeFromHP": "Income chargeable under the head 'House Property'",
@@ -33,14 +32,12 @@ if uploaded_file:
         "DeductionsUndSchVIADtl.TotDeductUndSchVIA": "Total Exempt Income"
     }
 
-    # Helper function to extract nested values
     def get_nested_value(data, path):
         keys = path.split('.')
         for key in keys:
             data = data.get(key, {}) if isinstance(data, dict) else {}
         return data if isinstance(data, (int, float)) else 0.0
 
-    # Build output data as rows like Excel format
     output_data = {
         "Particulars": [
             "B1 - Salaries", "Gross Salary", "Less :Allowances", "Net Salary", "Less :Deductions u/s 16",
@@ -69,7 +66,6 @@ if uploaded_file:
         "Amount (₹)": []
     }
 
-    # Fill in the "Amount (₹)" column using mapped fields
     for row in output_data["Particulars"]:
         matched_key = None
         for k, v in mapped_fields.items():
@@ -79,12 +75,11 @@ if uploaded_file:
         val = get_nested_value(partb_ti, matched_key) if matched_key else 0.0
         output_data["Amount (₹)"].append(val)
 
-    # Create and display the DataFrame
     df = pd.DataFrame(output_data)
+
     st.success("✅ Computation data extracted successfully!")
     st.dataframe(df, use_container_width=True)
 
-    # Export to Excel
     def to_excel(df):
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -99,3 +94,4 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
