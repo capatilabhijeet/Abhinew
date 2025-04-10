@@ -111,7 +111,7 @@ if uploaded_file:
             "B6 - Details of Exempt Income", "Interest income", "Net Agricultural income for the year",
             "Others exempt income", "Income not chargeable to tax as per DTAA",
             "Pass through income not chargeable to tax", "Total Exempt Income"
-        ]
+        ],
         "Amount (₹)": []
     }
 
@@ -160,4 +160,3 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
