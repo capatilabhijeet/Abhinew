@@ -26,12 +26,12 @@ if uploaded_file:
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
         "Last Name": name_info.get("SurNameOrOrgName", ""),
-        "Mobile No": data.get("MobileNo", personal_info.get("MobileNo", "")),
-        "Email Address": data.get("EmailAddress", personal_info.get("EmailAddress", "")),
+        "Mobile No": itr3.get("PartA_GEN2", {}).get("MobileNo", personal_info.get("MobileNo", "")),
+        "Email Address": itr3.get("PartA_GEN2", {}).get("EmailAddress", personal_info.get("EmailAddress", "")),
         "Date of Incorporation": personal_info.get("DOB", ""),
-        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
+        "Assessment Year": data.get("FormName", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
         "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
-        "Assessee Name": declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", ""))
+        "Assessee Name": data.get("ITR", {}).get("ITR3", {}).get("Verification", {}).get("Declaration", {}).get("AssesseeVerName", "")
     }
 
     filing_info = {
@@ -135,5 +135,3 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-
