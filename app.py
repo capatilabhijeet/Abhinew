@@ -16,29 +16,30 @@ if uploaded_file:
     personal_info = itr3.get("PartA_GEN1", {}).get("PersonalInfo", {})
     filing_status = itr3.get("PartA_GEN1", {}).get("FilingStatus", {})
     name_info = personal_info.get("AssesseeName", {})
+    declaration = itr3.get("Declaration", {})
 
-    # Extract header data
+    # Robust header field resolution with fallbacks
     header_info = {
         "PAN": personal_info.get("PAN", ""),
-        "GST Number": personal_info.get("GSTINNo", ""),
-        "Legal Name of Business": personal_info.get("TradeName1", ""),
+        "GST Number": personal_info.get("GSTINNo", personal_info.get("GSTIN", "")),
+        "Legal Name of Business": personal_info.get("TradeName1", declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", ""))),
         "First Name": name_info.get("FirstName", ""),
         "Middle Name": name_info.get("MiddleName", ""),
         "Last Name": name_info.get("SurNameOrOrgName", ""),
         "Mobile No": data.get("MobileNo", personal_info.get("MobileNo", "")),
-        "Email Address": data.get("EmailAddress", ""),
+        "Email Address": data.get("EmailAddress", personal_info.get("EmailAddress", "")),
         "Date of Incorporation": personal_info.get("DOB", ""),
-        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", ""),
+        "Assessment Year": data.get("Form_ITR3", {}).get("AssessmentYear", data.get("AssessmentYear", "")),
         "Aadhar Number": personal_info.get("AadhaarCardNo", ""),
-        "Assessee Name": itr3.get("Declaration", {}).get("AssesseeVerName", "")
+        "Assessee Name": declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", ""))
     }
 
     filing_info = {
-        "Name": itr3.get("Declaration", {}).get("AssesseeVerName", ""),
+        "Name": declaration.get("AssesseeVerName", name_info.get("SurNameOrOrgName", "")),
         "PAN Number": personal_info.get("PAN", ""),
         "Filed u/s": filing_status.get("ReturnFiledSection", ""),
-        "Acknowledgement No": filing_status.get("AckNum44AB", ""),
-        "Date of Filing": filing_status.get("ItrFilingDueDate", ""),
+        "Acknowledgement No": filing_status.get("AckNum44AB", filing_status.get("AckNo", "")),
+        "Date of Filing": filing_status.get("ItrFilingDueDate", filing_status.get("DateOfFiling", "")),
         "Status of CPC": filing_status.get("CpcProcessingStatus", "")
     }
 
@@ -134,4 +135,5 @@ if uploaded_file:
         file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
