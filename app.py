@@ -3,18 +3,17 @@ import pandas as pd
 import streamlit as st
 from io import BytesIO
 
-st.set_page_config(page_title="ITR JSON to Excel", layout="centered")
-st.title("🧾 Income Tax JSON to Head-wise Excel Converter")
+st.set_page_config(page_title="ITR JSON to Excel", layout="wide")
+st.title("🧾 Income Tax JSON to Excel - Detailed Format")
 
 uploaded_file = st.file_uploader("Upload your ITR JSON file", type="json")
 
 if uploaded_file:
     data = json.load(uploaded_file)
 
-    # Navigate to the relevant section
     partb_ti = data.get("ITR", {}).get("ITR3", {}).get("PartB-TI", {})
 
-    # Map fields to the format required
+    # Income field map to Excel-style rows
     mapped_fields = {
         "Salaries": "Income chargeable under the head 'Salaries'",
         "IncomeFromHP": "Income chargeable under the head 'House Property'",
@@ -41,30 +40,62 @@ if uploaded_file:
             data = data.get(key, {}) if isinstance(data, dict) else {}
         return data if isinstance(data, (int, float)) else 0.0
 
-    # Create output data
-    output_data = []
-    for key_path, label in mapped_fields.items():
-        value = get_nested_value(partb_ti, key_path)
-        output_data.append({"Particulars": label, "Amount (₹)": value})
+    # Build output data as rows like Excel format
+    output_data = {
+        "Particulars": [
+            "B1 - Salaries", "Gross Salary", "Less :Allowances", "Net Salary", "Less :Deductions u/s 16",
+            "Income chargeable under the head 'Salaries'",
+            "B2 - Income from House Property", "Gross rent received/ receivable/ lettable value during the year",
+            "Less :Tax paid to local authorities", "Annual Value", "Less : 30% of Annual Value",
+            "Less :Interest payable on borrowed capital", "Less :Arrears/Unrealised rent received during the year less 30%",
+            "Income chargeable under the head 'House Property'",
+            "B3 - Profits and gains from business or profession",
+            "Profit and gains from business other than speculative business and specified business",
+            "Profit and gains from speculative business", "Profit and gains from specified business",
+            "Income chargeable to tax at special rates",
+            "Income chargeable under the head 'Profits and gains from business or profession'",
+            "B4 - Capital gains", "Short term", "Short-term chargeable @ 15%", "Short-term chargeable @ 30%",
+            "Short-term chargeable at applicable rate", "Short-term chargeable at special rates in India as per DTAA",
+            "Total short-term", "Long term", "Long-term chargeable @ 10%", "Long-term chargeable @ 20%",
+            "LTCG chargeable at special rates as per DTAA", "Total Long-term",
+            "Income chargeable under the head 'Capital Gain'",
+            "B5 - Income from other sources", "Net Income from other sources chargeable to tax at normal applicable rates",
+            "Income chargeable to tax at special rate", "Income from the activity of owning & maintaining race horses",
+            "Income chargeable under the head 'Income from other sources'",
+            "B6 - Details of Exempt Income", "Interest income", "Net Agricultural income for the year",
+            "Others exempt income", "Income not chargeable to tax as per DTAA",
+            "Pass through income not chargeable to tax", "Total Exempt Income"
+        ],
+        "Amount (₹)": []
+    }
 
+    # Fill in the "Amount (₹)" column using mapped fields
+    for row in output_data["Particulars"]:
+        matched_key = None
+        for k, v in mapped_fields.items():
+            if v == row:
+                matched_key = k
+                break
+        val = get_nested_value(partb_ti, matched_key) if matched_key else 0.0
+        output_data["Amount (₹)"].append(val)
+
+    # Create and display the DataFrame
     df = pd.DataFrame(output_data)
-
-    st.success("✅ Data extracted successfully!")
+    st.success("✅ Computation data extracted successfully!")
     st.dataframe(df, use_container_width=True)
 
-    # Convert DataFrame to Excel in-memory
+    # Export to Excel
     def to_excel(df):
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='Headwise Income')
-        processed_data = output.getvalue()
-        return processed_data
+            df.to_excel(writer, index=False, sheet_name='COMPUTATION OF TOTAL INCOME')
+        return output.getvalue()
 
     excel_data = to_excel(df)
 
     st.download_button(
-        label="📥 Download Excel",
+        label="📥 Download Computation Excel",
         data=excel_data,
-        file_name="headwise_income.xlsx",
+        file_name="computation_total_income.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
