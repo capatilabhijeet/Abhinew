@@ -1,5 +1,12 @@
-    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrLiabilitiesProv", "CurrLiabilities", "SundryCred"],
-    "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
+    import streamlit as st
+import pandas as pd
+import json
+from io import BytesIO
+
+# JSON Field Mapping
+FIELD_MAP = {
+    "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
+    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "SundryCred"],
     "Fixed Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "FixedAsset", "TotFixedAsset"],
     "Investments": ["ITR", "ITR3", "PARTA_BS", "FundApply", "Investments", "TotInvestments"],
     "Loans and Advances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "LoanAdv", "TotLoanAdv"],
@@ -33,7 +40,6 @@ def get_value(data, path):
     if path == "":
         return ""
     try:
-        # Generalized handling for any list-indexed field like GSTINNo, Description, TradeName1, Code, etc.
         if isinstance(path, list) and len(path) > 2 and isinstance(path[-2], int):
             container = data
             for p in path[:-2]:
@@ -45,7 +51,10 @@ def get_value(data, path):
             data = data[p]
         return data
     except (KeyError, IndexError, TypeError):
-        return 0 if isinstance(path, list) and any(x in path[-1] for x in ["Income", "Salary", "Profit"]) else ""
+        return 0
+
+st.title("📂 JSON to Excel Converter - Income Tax Computation")
+uploaded_json = st.file_uploader("Upload JSON File", type="json")
 
 if uploaded_json is not None:
     json_data = json.load(uploaded_json)
