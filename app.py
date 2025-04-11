@@ -22,8 +22,6 @@ FIELD_MAP = {
     "Assessment Year": ["ITR", "ITR3", "Form_ITR3", "AssessmentYear"],
     "Trade Name (Income Tax)": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "TradeName1"],
     "Business Code": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "Code"],
-    "Business Description": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "Description"],
-
     # Salary
     "B1 Salaries": "",
     "Gross Salary": ["ITR", "ITR3", "ScheduleS", "TotalGrossSalary"],
@@ -69,6 +67,18 @@ FIELD_MAP = {
     "Income chargeable to tax at special rate": "",
     "Income from the activity of owning & maintaining race horses": "",
     "Income chargeable under the head \"Income from other sources\"": ["ITR", "ITR3", "ScheduleOS", "IncomeOtherSource"],
+
+    # Audit Info
+    "UDIN": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "UDIN"],
+    "Audit u/s 44AB applicable": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "LiableSec44ABflg"],
+    "Audit u/s 92E applicable": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "LiableSec92Eflg"],
+    "Date of furnishing of the audit report": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditReportFurnishDate"],
+    "Name of the auditor signing the tax audit report": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditorName"],
+    "Membership no. of the auditor": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditorMemNo"],
+    "Name of the auditor (proprietorship / firm)": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AudFrmName"],
+    "Proprietorship/firm registration number": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AudFrmRegNo"],
+    "Permanent Account Number (PAN) of the proprietorship/ firm": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AudFrmPAN"],
+    "Date of report of the audit": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditDate"],
 
     # Exempt Income
     "B6 Details of Exempt Income": "",
