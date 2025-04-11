@@ -50,15 +50,15 @@ FIELD_MAP = {
 
     # Capital Gains
     "B4 Capital gains": "",
-    "Short-term chargeable @ 15%": "",
-    "Short-term chargeable @ 30%": "",
-    "Short-term chargeable at applicable rate": "",
-    "Short-term chargeable at special rates in India as per DTAA": "",
-    "Total short-term": "",
-    "Long-term chargeable @ 10%": "",
-    "Long-term chargeable @ 20%": "",
-    "LTCG chargeable at special rates as per DTAA": "",
-    "Total Long-term": "",
+    "Short-term chargeable @ 15%": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTerm15Per"],
+    "Short-term chargeable @ 30%": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTerm30Per"],
+    "Short-term chargeable at applicable rate": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTermAppRate"],
+    "Short-term chargeable at special rates in India as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTermSplRateDTAA"],
+    "Total short-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "TotalShortTerm"],
+    "Long-term chargeable @ 10%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm10Per"],
+    "Long-term chargeable @ 20%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm20Per"],
+    "LTCG chargeable at special rates as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTermSplRateDTAA"],
+    "Total Long-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "TotalLongTerm"],
     "Income chargeable under the head \"Capital Gain\"": ["ITR", "ITR3", "ScheduleCG", "TotalCapitalGains"],
 
     # Other Sources
