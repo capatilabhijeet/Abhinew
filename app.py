@@ -18,7 +18,7 @@ FIELD_MAP = {
     "Email Address": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "Address", "EmailAddress"],
     "Aadhaar Number": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AadhaarCardNo"],
     "Date of Incorporation": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "DOB"],
-    "GST Number": ["ITR", "ITR3", "Form_ITR3", "TurnoverGrsRcptForGSTIN", 0, "GSTINNo"],
+    "GST Number": ["ITR", "ITR3", "ScheduleGST", "TurnoverGrsRcptForGSTIN", 0, "GSTINNo"],
     "Assessment Year": ["ITR", "ITR3", "Form_ITR3", "AssessmentYear"],
 
     # Salary
@@ -81,6 +81,14 @@ def get_value(data, path):
     if path == "":
         return ""
     try:
+        # Special handling for GST Number field
+        if path[-1] == "GSTINNo" and path[-2] == 0:
+            container = data
+            for p in path[:-2]:
+                container = container[p]
+            if isinstance(container, list) and len(container) > 0:
+                return container[0].get("GSTINNo", "")
+            return ""
         for p in path:
             data = data[p]
         return data
