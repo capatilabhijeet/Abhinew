@@ -42,11 +42,11 @@ FIELD_MAP = {
 
     # Business
     "B3 Profits and gains from business or profession": "",
-    "Profit and gains from business other than speculative business and specified business": ["ITR", "ITR3", "ITR3ScheduleBP", "NetPLAftAdjBusOthThanSpec"],
-    "Profit and gains from speculative business": "",
-    "Profit and gains from specified business": "",
-    "Income chargeable to tax at special rates": "",
-    "Income chargeable under the head \"Profits and gains from business or profession\"": ["ITR", "ITR3", "ITR3ScheduleBP", "NetPLAftAdjBusOthThanSpec"],
+    "Profit and gains from business other than speculative business and specified business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainNoSpecBus"],
+    "Profit and gains from speculative business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainSpecBus"],
+    "Profit and gains from specified business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainSpecifiedBus"],
+    "Income chargeable to tax at special rates": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfIncome115BBF"],
+    "Income chargeable under the head \"Profits and gains from business or profession\"": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "TotProfBusGain"],
 
     # Capital Gains
     "B4 Capital gains": "",
