@@ -59,7 +59,7 @@ FIELD_MAP = {
     "Long-term chargeable @ 20%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm20Per"],
     "LTCG chargeable at special rates as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTermSplRateDTAA"],
     "Total Long-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "TotalLongTerm"],
-    \"Income chargeable under the head \"Capital Gain\"\": ["ITR", "ITR3", "PartB-TI", "CapGain", "TotalCapGains"],
+    "Income chargeable under the head \"Capital Gain\"": ["ITR", "ITR3", "PartB-TI", "CapGain", "TotalCapGains"],
 
     # Other Sources
     "B5 Income from other sources": "",
