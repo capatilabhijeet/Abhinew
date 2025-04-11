@@ -59,14 +59,14 @@ FIELD_MAP = {
     "Long-term chargeable @ 20%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm20Per"],
     "LTCG chargeable at special rates as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTermSplRateDTAA"],
     "Total Long-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "TotalLongTerm"],
-    "Income chargeable under the head \"Capital Gain\"": ["ITR", "ITR3", "ScheduleCG", "TotalCapitalGains"],
+    \"Income chargeable under the head \"Capital Gain\"\": ["ITR", "ITR3", "PartB-TI", "CapGain", "TotalCapGains"],
 
     # Other Sources
     "B5 Income from other sources": "",
-    "Net Income from other sources chargeable to tax at normal applicable rates": ["ITR", "ITR3", "ScheduleOS", "IncomeOtherSource"],
-    "Income chargeable to tax at special rate": "",
-    "Income from the activity of owning & maintaining race horses": "",
-    "Income chargeable under the head \"Income from other sources\"": ["ITR", "ITR3", "ScheduleOS", "IncomeOtherSource"],
+    "Net Income from other sources chargeable to tax at normal applicable rates": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "OtherSrcThanOwnRaceHorse"],
+    "Income chargeable to tax at special rate": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "IncChargblSplRate"],
+    "Income from the activity of owning & maintaining race horses": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "FromOwnRaceHorse"],
+    "Income chargeable under the head \"Income from other sources\"": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "TotIncFromOS"],
 
     # Audit Info
     "UDIN": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "UDIN"],
@@ -79,6 +79,16 @@ FIELD_MAP = {
     "Proprietorship/firm registration number": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AudFrmRegNo"],
     "Permanent Account Number (PAN) of the proprietorship/ firm": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AudFrmPAN"],
     "Date of report of the audit": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditDate"],
+
+    # Balance Sheet
+    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "SundryCred"],
+    "Advances": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "Advances", "TotalAdvances"],
+    "Deferred Tax Liability": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "DeferredTax"],
+    "Total Loan Funds": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "TotLoanFund"],
+    "Unsecured Loans": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "UnsecrLoan", "TotUnSecrLoan"],
+    "Secured Loans": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "SecrLoan", "TotSecrLoan"],
+    "Total Proprietor Funds": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "PropFund", "TotPropFund"],
+    "Capital": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "PropFund", "PropCap"],
 
     # Exempt Income
     "B6 Details of Exempt Income": "",
