@@ -21,6 +21,8 @@ FIELD_MAP = {
     "GST Number": ["ITR", "ITR3", "ScheduleGST", "TurnoverGrsRcptForGSTIN", 0, "GSTINNo"],
     "Assessment Year": ["ITR", "ITR3", "Form_ITR3", "AssessmentYear"],
     "Trade Name (Income Tax)": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "TradeName1"],
+    "Business Code": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "Code"],
+    "Business Description": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "Description"],
 
     # Salary
     "B1 Salaries": "",
