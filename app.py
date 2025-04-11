@@ -81,9 +81,9 @@ FIELD_MAP = {
     "Date of report of the audit": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditDate"],
 
     # Balance Sheet
-    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "CurrLiabilities", "SundryCred"],
+    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilities", "SundryCred"],
     
-    "Provisions": ["ITR", "ITR3", "PARTA_BS", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
+    "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
     "Fixed Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "FixedAsset", "TotFixedAsset"],
     "Investments": ["ITR", "ITR3", "PARTA_BS", "FundApply", "Investments", "TotInvestments"],
     "Loans and Advances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "LoanAdv", "TotLoanAdv"],
