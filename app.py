@@ -81,6 +81,18 @@ FIELD_MAP = {
     "Date of report of the audit": ["ITR", "ITR3", "PartA_GEN2", "AuditInfo", "AuditDate"],
 
     # Balance Sheet
+    "Fixed Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "FixedAsset", "TotFixedAsset"],
+    "Investments": ["ITR", "ITR3", "PARTA_BS", "FundApply", "Investments", "TotInvestments"],
+    "Loans and Advances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "LoanAdv", "TotLoanAdv"],
+    "Other Current Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "OthCurrAsset"],
+    "Cash and Bank Balances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "CashOrBankBal", "TotCashOrBankBal"],
+    "Sundry Debtors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "SndryDebtors"],
+    "Inventories": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "Inventories", "TotInventries"],
+    "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
+    "Total Current Liabilities": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "TotCurrLiabilities"],
+    "Interest accrued but not due on loans": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "AccrIntNotDue"],
+    "Interest Accrued on leased Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "AccrIntonLeasedAsset"],
+    "Liability for leased Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "LiabForLeasedAsset"],
     "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "SundryCred"],
     "Advances": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "Advances", "TotalAdvances"],
     "Deferred Tax Liability": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "DeferredTax"],
