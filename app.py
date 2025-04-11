@@ -92,6 +92,16 @@ def get_value(data, path):
             if isinstance(container, list) and len(container) > 0:
                 return container[0].get("GSTINNo", "")
             return ""
+
+        # Special handling for Business Description
+        if path[-1] == "Description" and path[-2] == 0:
+            container = data
+            for p in path[:-2]:
+                container = container[p]
+            if isinstance(container, list) and len(container) > 0:
+                return container[0].get("Description", "")
+            return ""
+
         for p in path:
             data = data[p]
         return data
