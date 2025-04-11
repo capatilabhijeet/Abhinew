@@ -82,7 +82,6 @@ FIELD_MAP = {
 
     # Balance Sheet
     "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilities", "SundryCred"],
-    
     "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
     "Fixed Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "FixedAsset", "TotFixedAsset"],
     "Investments": ["ITR", "ITR3", "PARTA_BS", "FundApply", "Investments", "TotInvestments"],
