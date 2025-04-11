@@ -20,6 +20,7 @@ FIELD_MAP = {
     "Date of Incorporation": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "DOB"],
     "GST Number": ["ITR", "ITR3", "ScheduleGST", "TurnoverGrsRcptForGSTIN", 0, "GSTINNo"],
     "Assessment Year": ["ITR", "ITR3", "Form_ITR3", "AssessmentYear"],
+    "Trade Name (Income Tax)": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "TradeName1"],
 
     # Salary
     "B1 Salaries": "",
