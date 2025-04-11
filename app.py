@@ -84,24 +84,14 @@ def get_value(data, path):
     if path == "":
         return ""
     try:
-        # Special handling for GST Number field
-        if path[-1] == "GSTINNo" and path[-2] == 0:
+        # Generalized handling for any list-indexed field like GSTINNo, Description, TradeName1, Code, etc.
+        if isinstance(path, list) and len(path) > 2 and isinstance(path[-2], int):
             container = data
             for p in path[:-2]:
                 container = container[p]
-            if isinstance(container, list) and len(container) > 0:
-                return container[0].get("GSTINNo", "")
+            if isinstance(container, list) and len(container) > path[-2]:
+                return container[path[-2]].get(path[-1], "")
             return ""
-
-        # Special handling for Business Description
-        if path[-1] == "Description" and path[-2] == 0:
-            container = data
-            for p in path[:-2]:
-                container = container[p]
-            if isinstance(container, list) and len(container) > 0:
-                return container[0].get("Description", "")
-            return ""
-
         for p in path:
             data = data[p]
         return data
