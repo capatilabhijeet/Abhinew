@@ -1,38 +1,50 @@
-    import streamlit as st
+import streamlit as st
 import pandas as pd
 import json
 from io import BytesIO
 
 # JSON Field Mapping
 FIELD_MAP = {
-    "Provisions": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "Provisions", "TotProvisions"],
-    "Sundry Creditors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "SundryCred"],
-    "Fixed Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "FixedAsset", "TotFixedAsset"],
-    "Investments": ["ITR", "ITR3", "PARTA_BS", "FundApply", "Investments", "TotInvestments"],
-    "Loans and Advances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "LoanAdv", "TotLoanAdv"],
-    "Other Current Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "OthCurrAsset"],
-    "Cash and Bank Balances": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "CashOrBankBal", "TotCashOrBankBal"],
-    "Sundry Debtors": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "SndryDebtors"],
-    "Inventories": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrAssetLoanAdv", "CurrAsset", "Inventories", "TotInventries"],
-    "Total Current Liabilities": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "TotCurrLiabilities"],
-    "Interest accrued but not due on loans": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "AccrIntNotDue"],
-    "Interest Accrued on leased Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "AccrIntonLeasedAsset"],
-    "Liability for leased Assets": ["ITR", "ITR3", "PARTA_BS", "FundApply", "CurrLiabilitiesProv", "CurrLiabilities", "LiabForLeasedAsset"],
-    "Advances": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "Advances", "TotalAdvances"],
-    "Deferred Tax Liability": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "DeferredTax"],
-    "Total Loan Funds": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "TotLoanFund"],
-    "Unsecured Loans": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "UnsecrLoan", "TotUnSecrLoan"],
-    "Secured Loans": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "LoanFunds", "SecrLoan", "TotSecrLoan"],
-    "Total Proprietor Funds": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "PropFund", "TotPropFund"],
-    "Capital": ["ITR", "ITR3", "PARTA_BS", "FundSrc", "PropFund", "PropCap"],
+    # Header Info
+    "PAN": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "PAN"],
+    "GST Number": ["ITR", "ITR3", "ScheduleGST", "TurnoverGrsRcptForGSTIN", 0, "GSTINNo"],
+    "Legal Name of Business": ["ITR", "ITR3", "PartA_GEN2", "NatOfBus", "NatureOfBusiness", 0, "TradeName1"],
+    "Mobile No": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "MobileNo"],
+    "Email Address": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "EmailAddress"],
+    "Assessment Year": ["ITR", "ITR3", "Form_ITR3", "AssessmentYear"],
+    "Assessee Name": ["ITR", "ITR3", "PartA_GEN1", "PersonalInfo", "AssesseeName", "SurNameOrOrgName"],
 
-    # Exempt Income
-    "B6 Details of Exempt Income": "",
-    "Interest income": "",
-    "Net Agricultural income for the year": "",
-    "Others exempt income": "",
-    "Income not chargeable to tax as per DTAA": "",
-    "Pass through income not chargeable to tax": "",
+    # Income Heads
+    "Gross Salary": ["ITR", "ITR3", "ScheduleS", "TotalGrossSalary"],
+    "Net Salary": ["ITR", "ITR3", "ScheduleS", "NetSalary"],
+    "Deductions u/s 16": ["ITR", "ITR3", "ScheduleS", "DeductionUS16"],
+    "Income chargeable under the head 'Salaries'": ["ITR", "ITR3", "ScheduleS", "TotIncUnderHeadSalaries"],
+
+    "Gross rent received": ["ITR", "ITR3", "PartB-TI", "IncomeFromHP"],
+    "Income chargeable under the head 'House Property'": ["ITR", "ITR3", "PartB-TI", "IncomeFromHP"],
+
+    "Profit and gains from business other than speculative business and specified business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainNoSpecBus"],
+    "Profit and gains from speculative business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainSpecBus"],
+    "Profit and gains from specified business": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfGainSpecifiedBus"],
+    "Income chargeable to tax at special rates": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "ProfIncome115BBF"],
+    "Income chargeable under the head 'Profits and gains from business or profession'": ["ITR", "ITR3", "PartB-TI", "ProfBusGain", "TotProfBusGain"],
+
+    "Short-term chargeable @ 15%": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTerm15Per"],
+    "Short-term chargeable @ 30%": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTerm30Per"],
+    "Short-term chargeable at applicable rate": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTermAppRate"],
+    "Short-term chargeable at special rates in India as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "ShortTermSplRateDTAA"],
+    "Total short-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "ShortTerm", "TotalShortTerm"],
+    "Long-term chargeable @ 10%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm10Per"],
+    "Long-term chargeable @ 20%": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTerm20Per"],
+    "LTCG chargeable at special rates as per DTAA": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "LongTermSplRateDTAA"],
+    "Total Long-term": ["ITR", "ITR3", "PartB-TI", "CapGain", "LongTerm", "TotalLongTerm"],
+    "Income chargeable under the head 'Capital Gain'": ["ITR", "ITR3", "PartB-TI", "CapGain", "TotalCapGains"],
+
+    "Net Income from other sources chargeable to tax at normal applicable rates": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "OtherSrcThanOwnRaceHorse"],
+    "Income chargeable to tax at special rate": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "IncChargblSplRate"],
+    "Income from the activity of owning & maintaining race horses": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "FromOwnRaceHorse"],
+    "Income chargeable under the head 'Income from other sources'": ["ITR", "ITR3", "PartB-TI", "IncFromOS", "TotIncFromOS"],
+
     "Total Exempt Income": ["ITR", "ITR3", "ScheduleEI", "TotExemptInc"]
 }
 
@@ -64,10 +76,10 @@ if uploaded_json is not None:
     st.subheader("📊 Computation in Desired Format")
     st.dataframe(df, use_container_width=True)
 
-    # Export to Excel
     excel_bytes = BytesIO()
     with pd.ExcelWriter(excel_bytes, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name="Computation")
+
     st.download_button(
         label="📥 Download Excel File",
         data=excel_bytes.getvalue(),
